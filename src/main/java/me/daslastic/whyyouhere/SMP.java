@@ -2,22 +2,28 @@ package me.daslastic.whyyouhere;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.daslastic.whyyouhere.commands.CommandManager;
 import me.daslastic.whyyouhere.player.PlayerManager;
 
 public class SMP extends JavaPlugin {
 
     private static SMP instance;
-    private PlayerManager pManager;
+    private static PlayerManager pManager;
 
     @Override
     public void onEnable() {
         instance = this;
-        this.pManager = new PlayerManager(this);
+        pManager = new PlayerManager(this);
+        new CommandManager(this);
     }
 
     @Override
     public void onDisable() {
-        this.pManager.onShutdown();
+        pManager.onShutdown();
+    }
+
+    public static PlayerManager playerManager() {
+        return pManager;
     }
 
     public static SMP getInstance() {

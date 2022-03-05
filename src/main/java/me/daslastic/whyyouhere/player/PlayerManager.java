@@ -34,7 +34,7 @@ public class PlayerManager {
 
     public void onShutdown() {
         playerDataMap.values().forEach(playerData -> {
-            playerData.save();
+            playerData.quit();
         });
         rankManager.save();
     }
