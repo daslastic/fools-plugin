@@ -12,12 +12,14 @@ public class PlayerData {
     
     private UConfig config;
     private UUID uuid;
+    private final PlayerManager pManager;
 
-    public PlayerData(Player player) {
+    public PlayerData(Player player, PlayerManager pManager) {
         this.uuid = player.getUniqueId();
+        this.pManager = pManager;
         config = new UConfig(SMP.getInstance().getName(), "PlayerData/" + uuid.toString());
-        PlayerManager.getManager().getPlayerDataMap().put(uuid, new PlayerData(player));
-        PlayerManager.getTasks().getJoinTasks().forEach( task -> {
+        pManager.getPlayerDataMap().put(uuid, this);
+        pManager.getTasks().getJoinTasks().forEach( task -> {
             task.run(this);
         });
     }
@@ -32,8 +34,8 @@ public class PlayerData {
 
     public void quit() {
         save();
-        PlayerManager.getManager().getPlayerDataMap().remove(uuid);
-        PlayerManager.getTasks().getQuitTasks().forEach( task -> {
+        pManager.getPlayerDataMap().remove(uuid);
+        pManager.getTasks().getQuitTasks().forEach( task -> {
             task.run(this);
         });
     }

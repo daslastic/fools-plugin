@@ -12,22 +12,23 @@ import me.daslastic.whyyouhere.SMP;
 
 public class PlayerTasks implements Listener {
 
-    private final PlayerManager pMan = PlayerManager.getManager();
+    private final PlayerManager pManager;
     private final List<PlayerRunnable> joinTasks = new ArrayList<>(); 
     private final List<PlayerRunnable> quitTasks = new ArrayList<>(); 
 
-    public PlayerTasks(SMP plugin) {
+    public PlayerTasks(SMP plugin, PlayerManager pManager) {
+        this.pManager = pManager;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        new PlayerData(event.getPlayer());
+        new PlayerData(event.getPlayer(), pManager);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        pMan.getPlayerData(event.getPlayer()).quit();
+        pManager.getPlayerData(event.getPlayer()).quit();
     }
 
     public void addJoinTask(PlayerRunnable task) {

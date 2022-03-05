@@ -14,15 +14,21 @@ public class PlayerManager implements Listener {
     
     private Map<UUID, PlayerData> playerDataMap = new ConcurrentHashMap<>();
 
-    private static PlayerManager playerManager;
-    private static PlayerTasks playerTasks;
-    private static RankManager rankManager;
+    private final PlayerTasks playerTasks;
+    private final RankManager rankManager;
 
     public PlayerManager(SMP plugin) {
-        playerManager = this;
-        playerTasks = new PlayerTasks(plugin);
-        rankManager = new RankManager(plugin);
+        playerTasks = new PlayerTasks(plugin, this);
+        rankManager = new RankManager(plugin, this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    public void addDefaultValue(String key, Object value) {
+        playerTasks.addJoinTask(playerData -> {
+            if(!playerData.config().isSet(key)) {
+                playerData.config().set(key, value);
+            }
+        });
     }
 
     public PlayerData getPlayerData(Player player) {
@@ -41,15 +47,11 @@ public class PlayerManager implements Listener {
         return playerDataMap.containsKey(uuid);
     }
 
-    public static PlayerManager getManager() {
-        return playerManager;
-    }
-
-    public static PlayerTasks getTasks() {
+    public PlayerTasks getTasks() {
         return playerTasks;
     }
 
-    public static RankManager getRanks() {
+    public RankManager getRanks() {
         return rankManager;
     }
 
