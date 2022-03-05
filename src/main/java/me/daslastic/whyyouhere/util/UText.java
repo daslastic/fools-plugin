@@ -4,7 +4,8 @@ import net.md_5.bungee.api.ChatColor;
 
 public class UText {
     
-    public static String translateColor(String s) {
+    public static String color(String s) {
+        if(s == null) return s;
         return ChatColor.translateAlternateColorCodes('&', s);
     }
     

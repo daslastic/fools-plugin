@@ -1,7 +1,6 @@
 package me.daslastic.whyyouhere.player.ranks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,13 +21,24 @@ public class RankManager {
     
     public RankManager(SMP plugin, PlayerManager pManager) {
 
-        pManager.addDefaultValue(rankKey, new ArrayList<String>());
+        // set default ranks
+        pManager.addDefaultValue(rankKey, List.of("default"));
 
         // rank init
         FileConfiguration rankConfig = rankConfigManager.get();
+        // add default rank
+        if(!rankConfig.getKeys(false).contains("default")) {
+            makeRank("default", "&a&lMember", false);
+        }
+
         // read each rank ID
         rankConfig.getKeys(false).forEach(rankSection -> {
             
+            String rankName = rankConfig.getString(String.format("%s.name", rankSection));
+            boolean isSuffix = rankConfig.getBoolean(String.format("%s.suffix", rankSection));
+
+            ranks.put(rankSection, new Rank(rankName, isSuffix));
+
         });
 
         // rank assingment
@@ -37,11 +47,12 @@ public class RankManager {
             public void run(PlayerData playerData) {
                 List<String> ranks = playerData.config().getStringList(rankKey);
                 List<String> toRemove = new ArrayList<>();
-                for (String rank : ranks) {
-                    if(isRank(rank)) {
-
+                for (String rankID : ranks) {
+                    if(isRank(rankID)) {
+                        Rank rank = getRank(rankID);
+                        rank.assignRank(playerData);
                     } else {
-                        toRemove.add(rank);
+                        toRemove.add(rankID);
                     }
                 }
                 ranks.removeAll(toRemove);
@@ -49,6 +60,16 @@ public class RankManager {
             }
         });
 
+    }
+
+    public void makeRank(String id, String name, Boolean isSuffix) {
+        rankConfigManager.get().set(String.format("%s.%s", id, "name"), name);
+        rankConfigManager.get().set(String.format("%s.%s", id, "suffix"), isSuffix);
+        save();
+    }
+
+    public void save() {
+        rankConfigManager.save();
     }
 
     public boolean isRank(String name) {

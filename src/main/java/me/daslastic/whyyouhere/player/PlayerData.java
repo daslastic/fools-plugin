@@ -4,22 +4,34 @@ import java.util.UUID;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 import me.daslastic.whyyouhere.SMP;
 import me.daslastic.whyyouhere.util.UConfig;
 
 public class PlayerData {
     
-    private UConfig config;
-    private UUID uuid;
+    private final UConfig config;
+    private final UUID uuid;
     private final PlayerManager pManager;
+    private final Team team;
 
     public PlayerData(Player player, PlayerManager pManager) {
         this.uuid = player.getUniqueId();
         this.pManager = pManager;
+
+        // INCASE THE DATA WAS NOT REMOVED PROPERLY. (hopefully this is not needed)
+        Team oldTeam = pManager.getScoreboardManager().getTeam(player.getName());
+        if(oldTeam != null) {
+            oldTeam.unregister();
+            SMP.getInstance().getServer().getLogger().warning(player.getName() + " HAD REMNANTS");
+        }
+
+        this.team = pManager.getScoreboardManager().registerNewTeam(player.getName());
+        team.addEntry(player.getName());
         config = new UConfig(SMP.getInstance().getName(), "PlayerData/" + uuid.toString());
         pManager.getPlayerDataMap().put(uuid, this);
-        pManager.getTasks().getJoinTasks().forEach( task -> {
+        pManager.getTasks().getJoinTasks().forEach(task -> {
             task.run(this);
         });
     }
@@ -32,12 +44,21 @@ public class PlayerData {
         config.save();
     }
 
+    public Player getPlayer() {
+        return SMP.getInstance().getServer().getPlayer(this.uuid);
+    }
+
     public void quit() {
         save();
-        pManager.getPlayerDataMap().remove(uuid);
-        pManager.getTasks().getQuitTasks().forEach( task -> {
+        pManager.getTasks().getQuitTasks().forEach(task -> {
             task.run(this);
         });
+        team.unregister();
+        pManager.getPlayerDataMap().remove(uuid);
+    }
+
+    public Team team() {
+        return this.team;
     }
 
 }

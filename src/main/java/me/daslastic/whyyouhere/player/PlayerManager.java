@@ -5,22 +5,38 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
+import org.bukkit.scoreboard.Scoreboard;
 
 import me.daslastic.whyyouhere.SMP;
+import me.daslastic.whyyouhere.player.events.PlayerChat;
 import me.daslastic.whyyouhere.player.ranks.RankManager;
 
-public class PlayerManager implements Listener {
+public class PlayerManager {
     
     private Map<UUID, PlayerData> playerDataMap = new ConcurrentHashMap<>();
 
     private final PlayerTasks playerTasks;
     private final RankManager rankManager;
 
+    private final Scoreboard scoreboard;
+
     public PlayerManager(SMP plugin) {
+        this.scoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
         playerTasks = new PlayerTasks(plugin, this);
         rankManager = new RankManager(plugin, this);
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getOnlinePlayers().forEach(player -> {
+            new PlayerData(player, this);
+        });
+
+        // add event listeners
+        plugin.getServer().getPluginManager().registerEvents(new PlayerChat(this), plugin);
+    }
+
+    public void onShutdown() {
+        playerDataMap.values().forEach(playerData -> {
+            playerData.save();
+        });
+        rankManager.save();
     }
 
     public void addDefaultValue(String key, Object value) {
@@ -43,8 +59,12 @@ public class PlayerManager implements Listener {
         return this.playerDataMap;
     }
 
-    public boolean isDataSet(UUID uuid) {
+    public boolean isPlayerData(UUID uuid) {
         return playerDataMap.containsKey(uuid);
+    }
+
+    public Scoreboard getScoreboardManager() {
+        return scoreboard;
     }
 
     public PlayerTasks getTasks() {
