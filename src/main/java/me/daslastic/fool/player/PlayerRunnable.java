@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.player;
+package me.daslastic.fool.player;
 
 public interface PlayerRunnable {
 

@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.player.ranks;
+package me.daslastic.fool.player.ranks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,20 +9,20 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
-import me.daslastic.whyyouhere.SMP;
-import me.daslastic.whyyouhere.player.PlayerData;
-import me.daslastic.whyyouhere.player.PlayerManager;
-import me.daslastic.whyyouhere.player.PlayerRunnable;
-import me.daslastic.whyyouhere.util.UConfig;
-import me.daslastic.whyyouhere.util.UText;
+import me.daslastic.fool.Fool;
+import me.daslastic.fool.player.PlayerData;
+import me.daslastic.fool.player.PlayerManager;
+import me.daslastic.fool.player.PlayerRunnable;
+import me.daslastic.fool.util.UConfig;
+import me.daslastic.fool.util.UText;
 
 public class RankManager {
 
     private Map<String, Rank> ranks = new ConcurrentHashMap<>();
     private static final String RANK_KEY = new String("ranks");
-    private final UConfig rankConfigManager = new UConfig(SMP.getInstance().getName(), "ranks");
+    private final UConfig rankConfigManager = new UConfig(Fool.getInstance().getName(), "ranks");
     
-    public RankManager(SMP plugin, PlayerManager pManager) {
+    public RankManager(Fool plugin, PlayerManager pManager) {
 
         // set default ranks
         pManager.addDefaultValue(RANK_KEY, List.of("default"));
@@ -116,6 +116,10 @@ public class RankManager {
 
     public Rank getRank(String name) {
         return this.ranks.get(name);
+    }
+
+    public Map<String, Rank> rankMap() {
+        return this.ranks;
     }
 
 }

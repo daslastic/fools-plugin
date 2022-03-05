@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.commands;
+package me.daslastic.fool.commands;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.player;
+package me.daslastic.fool.player;
 
 import java.util.UUID;
 
@@ -6,8 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
-import me.daslastic.whyyouhere.SMP;
-import me.daslastic.whyyouhere.util.UConfig;
+import me.daslastic.fool.Fool;
+import me.daslastic.fool.util.UConfig;
 
 public class PlayerData {
     
@@ -24,12 +24,12 @@ public class PlayerData {
         Team oldTeam = pManager.getScoreboardManager().getTeam(player.getName());
         if(oldTeam != null) {
             oldTeam.unregister();
-            SMP.getInstance().getServer().getLogger().warning(player.getName() + " HAD REMNANTS");
+            Fool.getInstance().getServer().getLogger().warning(player.getName() + " HAD REMNANTS");
         }
 
         this.team = pManager.getScoreboardManager().registerNewTeam(player.getName());
         team.addEntry(player.getName());
-        config = new UConfig(SMP.getInstance().getName(), "PlayerData/" + uuid.toString());
+        config = new UConfig(Fool.getInstance().getName(), "PlayerData/" + uuid.toString());
         pManager.getPlayerDataMap().put(uuid, this);
         pManager.getTasks().getJoinTasks().forEach(task -> {
             task.run(this);
@@ -45,7 +45,7 @@ public class PlayerData {
     }
 
     public Player getPlayer() {
-        return SMP.getInstance().getServer().getPlayer(this.uuid);
+        return Fool.getInstance().getServer().getPlayer(this.uuid);
     }
 
     public void quit() {

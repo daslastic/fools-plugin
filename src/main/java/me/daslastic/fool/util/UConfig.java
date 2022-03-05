@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.util;
+package me.daslastic.fool.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

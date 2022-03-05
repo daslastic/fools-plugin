@@ -1,15 +1,14 @@
-package me.daslastic.whyyouhere.commands;
+package me.daslastic.fool.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import me.daslastic.whyyouhere.SMP;
-import me.daslastic.whyyouhere.commands.subcommands.ranks.*;
-import me.daslastic.whyyouhere.player.PlayerManager;
-import me.daslastic.whyyouhere.util.UHelp;
-import me.daslastic.whyyouhere.util.UText;
+import me.daslastic.fool.Fool;
+import me.daslastic.fool.commands.subcommands.ranks.*;
+import me.daslastic.fool.util.UHelp;
+import me.daslastic.fool.util.UText;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,19 +16,20 @@ import java.util.stream.Collectors;
 public class CommandManager implements TabExecutor {
     
     private final Map<String, CommandData> commandManager = new HashMap<>();
-    private final SMP plugin;
+    private final Fool plugin;
 
-    public CommandManager(SMP plugin) {
+    public CommandManager(Fool plugin) {
         this.plugin = plugin;
 
         commandManager.put("rank", new CommandData(
             "whyyouhere.admin",
             null, false, Arrays.asList(
-                new AssignRank()
+                new AssignRank(),
+                new RevokeRank()
             ),
             arg -> {
                 if (arg.equals("<id>")) {
-                    //return new ArrayList<>(SMP.getInstance().playerManager().getRanks().keySet());
+                    return new ArrayList<>(Fool.getInstance().getPlayerManager().getRanks().rankMap().keySet());
                 }
                 return null;
             }

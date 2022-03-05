@@ -1,14 +1,14 @@
-package me.daslastic.whyyouhere;
+package me.daslastic.fool;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.daslastic.whyyouhere.commands.CommandManager;
-import me.daslastic.whyyouhere.player.PlayerManager;
+import me.daslastic.fool.commands.CommandManager;
+import me.daslastic.fool.player.PlayerManager;
 
-public class SMP extends JavaPlugin {
+public class Fool extends JavaPlugin {
 
-    private static SMP instance;
-    private static PlayerManager pManager;
+    private static Fool instance;
+    private PlayerManager pManager;
 
     @Override
     public void onEnable() {
@@ -22,11 +22,11 @@ public class SMP extends JavaPlugin {
         pManager.onShutdown();
     }
 
-    public static PlayerManager playerManager() {
+    public PlayerManager getPlayerManager() {
         return pManager;
     }
 
-    public static SMP getInstance() {
+    public static Fool getInstance() {
         return instance;
     }
 

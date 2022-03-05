@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.player;
+package me.daslastic.fool.player;
 
 import java.util.Map;
 import java.util.UUID;
@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 
-import me.daslastic.whyyouhere.SMP;
-import me.daslastic.whyyouhere.player.events.PlayerChat;
-import me.daslastic.whyyouhere.player.ranks.RankManager;
+import me.daslastic.fool.Fool;
+import me.daslastic.fool.player.events.PlayerChat;
+import me.daslastic.fool.player.ranks.RankManager;
 
 public class PlayerManager {
     
@@ -20,7 +20,7 @@ public class PlayerManager {
 
     private final Scoreboard scoreboard;
 
-    public PlayerManager(SMP plugin) {
+    public PlayerManager(Fool plugin) {
         this.scoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
         playerTasks = new PlayerTasks(plugin, this);
         rankManager = new RankManager(plugin, this);

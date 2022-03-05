@@ -1,10 +1,10 @@
-main: me.daslastic.whyyouhere.SMP
-name: WhyYouHere
+main: me.daslastic.fool.Fool
+name: fool
 version: 1.0.0
-description: Why are you here?
+description: Why are you here? Why did I code this?
 api-version: 1.18
 author: daslastic
 website: daslastic.xyz
 commands:
   help:
-  admin:
+  rank:

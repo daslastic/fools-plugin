@@ -1,11 +1,11 @@
-package me.daslastic.whyyouhere.player.events;
+package me.daslastic.fool.player.events;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scoreboard.Team;
 
-import me.daslastic.whyyouhere.player.PlayerManager;
+import me.daslastic.fool.player.PlayerManager;
 
 public class PlayerChat implements Listener {
 

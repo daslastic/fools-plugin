@@ -1,8 +1,8 @@
-package me.daslastic.whyyouhere.commands;
+package me.daslastic.fool.commands;
 
 import org.bukkit.command.CommandSender;
 
-import me.daslastic.whyyouhere.SMP;
+import me.daslastic.fool.Fool;
 
 public abstract class SubCommand {
 
@@ -10,6 +10,6 @@ public abstract class SubCommand {
     public abstract String getDescription();
     public abstract String getSyntax();
 
-    public abstract void execute(SMP plugin, CommandSender player, String args[]);
+    public abstract void execute(Fool plugin, CommandSender player, String args[]);
 
 }

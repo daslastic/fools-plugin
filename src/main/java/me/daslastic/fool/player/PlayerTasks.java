@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.player;
+package me.daslastic.fool.player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import me.daslastic.whyyouhere.SMP;
+import me.daslastic.fool.Fool;
 
 public class PlayerTasks implements Listener {
 
@@ -16,7 +16,7 @@ public class PlayerTasks implements Listener {
     private final List<PlayerRunnable> joinTasks = new ArrayList<>(); 
     private final List<PlayerRunnable> quitTasks = new ArrayList<>(); 
 
-    public PlayerTasks(SMP plugin, PlayerManager pManager) {
+    public PlayerTasks(Fool plugin, PlayerManager pManager) {
         this.pManager = pManager;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

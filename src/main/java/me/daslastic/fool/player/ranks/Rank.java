@@ -1,10 +1,10 @@
-package me.daslastic.whyyouhere.player.ranks;
+package me.daslastic.fool.player.ranks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import me.daslastic.whyyouhere.player.PlayerData;
-import me.daslastic.whyyouhere.util.UText;
+import me.daslastic.fool.player.PlayerData;
+import me.daslastic.fool.util.UText;
 
 public class Rank {
     

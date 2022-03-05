@@ -1,4 +1,4 @@
-package me.daslastic.whyyouhere.util;
+package me.daslastic.fool.util;
 
 import org.apache.commons.lang.StringUtils;
 
