@@ -1,0 +1,7 @@
+main: me.daslastic.whyyouhere.SMP
+name: WhyYouHere
+version: 1.0.0
+description: Why are you here?
+api-version: 1.18
+author: daslastic
+website: daslastic.xyz
