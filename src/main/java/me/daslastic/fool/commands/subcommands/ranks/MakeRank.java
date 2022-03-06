@@ -1,46 +1,38 @@
 package me.daslastic.fool.commands.subcommands.ranks;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import me.daslastic.fool.Fool;
 import me.daslastic.fool.commands.SubCommand;
 import me.daslastic.fool.player.ranks.RankManager;
 import net.md_5.bungee.api.ChatColor;
 
-public class RevokeRank extends SubCommand {
+public class MakeRank extends SubCommand {
 
     @Override
     public String getName() {
-        return "revoke";
+        return "make";
     }
 
     @Override
     public String getDescription() {
-        return "remove a rank to a player";
+        return "make a custom rank";
     }
 
     @Override
     public String getSyntax() {
-        return "<id> <player>";
+        return "<id> <name> <suffix=true/false>";
     }
 
     @Override
     public void execute(Fool plugin, CommandSender player, String[] args) {
         
         RankManager rMan = plugin.getPlayerManager().getRanks();
-        Player playerAssign = plugin.getServer().getPlayer(args[2]);
-        if(playerAssign == null) {
-            player.sendMessage(ChatColor.RED + args[2] + " player not found.");
-            return;
-        }
-
         if(rMan.isRank(args[1])) {
-            rMan.revokeRank(playerAssign, rMan.getRank(args[1]));
-            player.sendMessage(ChatColor.GREEN + args[1] + " rank revoked from " + args[2]);
-        } else {
-            player.sendMessage(ChatColor.RED + args[1] + " rank not found.");
+            rMan.deleteRank(rMan.getRank(args[1]));
         }
+        rMan.makeRank(args[1], args[2], Boolean.parseBoolean(args[3]));
+        player.sendMessage(ChatColor.GREEN + args[1] + " rank created!");
 
     }
     

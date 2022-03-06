@@ -54,6 +54,8 @@ public class PlayerData {
             task.run(this);
         });
         team.unregister();
+        Player player = getPlayer();
+        player.setPlayerListName(player.getName());
         pManager.getPlayerDataMap().remove(uuid);
     }
 

@@ -25,7 +25,9 @@ public class CommandManager implements TabExecutor {
             "whyyouhere.admin",
             null, false, Arrays.asList(
                 new AssignRank(),
-                new RevokeRank()
+                new RevokeRank(),
+                new MakeRank(),
+                new DeleteRank()
             ),
             arg -> {
                 if (arg.equals("<id>")) {
@@ -77,6 +79,7 @@ public class CommandManager implements TabExecutor {
                             subCommand.execute(plugin, sender, args);
                             return true;
                         }
+
                         List<String> subArgs = Arrays.stream(subCommand.getSyntax().split("\\s+")).toList();
                         subArgs = subArgs.stream().filter(s -> !s.contains("optional")).collect(Collectors.toList());
                         int len = subArgs.size();

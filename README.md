@@ -1,4 +1,3 @@
-## Minecraft SMP - Why You Here
-This was made for fun for my friends.
-This will include: (more to be added soon)
+## A plugin I made, too fool around
 - Ranks
+- Gravity Guns

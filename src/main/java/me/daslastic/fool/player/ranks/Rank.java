@@ -8,11 +8,13 @@ import me.daslastic.fool.util.UText;
 
 public class Rank {
     
+    private String id;
+
     private String name;
     private boolean suffix;
-    private List<PlayerData> assinged = new ArrayList<>();
     
-    public Rank(String name, boolean suffix) {
+    public Rank(String id, String name, boolean suffix) {
+        this.id = id;
         this.name = UText.color(name);
         this.suffix = suffix;
     }
@@ -33,12 +35,12 @@ public class Rank {
         this.suffix = suffix;
     }
 
-    public List<PlayerData> getAssinged() {
-        return this.assinged;
+    public String getId() {
+        return this.id;
     }
 
-    public void setAssinged(List<PlayerData> assinged) {
-        this.assinged = assinged;
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

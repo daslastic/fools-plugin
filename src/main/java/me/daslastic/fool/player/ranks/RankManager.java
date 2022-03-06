@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Team;
 
 import me.daslastic.fool.Fool;
@@ -18,11 +19,15 @@ import me.daslastic.fool.util.UText;
 
 public class RankManager {
 
+    private final Fool plugin;
+    private final PlayerManager pManager;
     private Map<String, Rank> ranks = new ConcurrentHashMap<>();
     private static final String RANK_KEY = new String("ranks");
     private final UConfig rankConfigManager = new UConfig(Fool.getInstance().getName(), "ranks");
     
     public RankManager(Fool plugin, PlayerManager pManager) {
+        this.plugin = plugin;
+        this.pManager = pManager;
 
         // set default ranks
         pManager.addDefaultValue(RANK_KEY, List.of("default"));
@@ -40,7 +45,7 @@ public class RankManager {
             String rankName = rankConfig.getString(String.format("%s.name", rankSection));
             boolean isSuffix = rankConfig.getBoolean(String.format("%s.suffix", rankSection));
 
-            ranks.put(rankSection, new Rank(rankName, isSuffix));
+            makeRank(rankSection, rankName, isSuffix);
 
         });
 
@@ -53,7 +58,7 @@ public class RankManager {
                 for (String rankID : ranks) {
                     if(isRank(rankID)) {
                         Rank rank = getRank(rankID);
-                        assignRank(playerData.getPlayer(), playerData, rank);
+                        drawRank(playerData.getPlayer(), rank);
                     } else {
                         toRemove.add(rankID);
                     }
@@ -68,6 +73,7 @@ public class RankManager {
     public void makeRank(String id, String name, Boolean isSuffix) {
         rankConfigManager.get().set(String.format("%s.%s", id, "name"), name);
         rankConfigManager.get().set(String.format("%s.%s", id, "suffix"), isSuffix);
+        ranks.put(id, new Rank(id, name, isSuffix));
         save();
     }
 
@@ -75,7 +81,53 @@ public class RankManager {
         rankConfigManager.save();
     }
 
-    public void assignRank(Player player, PlayerData playerData, Rank rank) {
+    public void assignRank(Player player, Rank rank) {
+        PlayerData playerData = pManager.getPlayerData(player);
+        
+        List<String> ranks = playerData.config().getStringList(RANK_KEY);
+        ranks.add(rank.getId());
+        playerData.config().set(RANK_KEY, ranks);
+        
+        updateRanks(player);
+    }
+
+    public void revokeRank(Player player, Rank rank) {
+        PlayerData playerData = pManager.getPlayerData(player);
+
+        List<String> ranks = playerData.config().getStringList(RANK_KEY);
+        ranks.remove(rank.getId());
+        playerData.config().set(RANK_KEY, ranks);
+
+        updateRanks(player);
+    }
+
+    public void deleteRank(Rank rank) {
+        rankConfigManager.get().set(rank.getId(), null);
+        ranks.remove(rank.getId());
+
+        pManager.getPlayerDataMap().values().forEach(playerData -> {
+            updateRanks(playerData.getPlayer());
+        });
+    }
+
+    public void updateRanks(Player player) {
+        PlayerData playerData = pManager.getPlayerData(player);
+        Team team = playerData.team();
+
+        team.setSuffix("");
+        team.setPrefix("");
+        player.setPlayerListName(player.getName());
+
+        for(String rankID : playerData.config().getStringList(RANK_KEY)) {
+            if(isRank(rankID)) {
+                Rank rank = getRank(rankID);
+                drawRank(player, rank);
+            }
+        }
+    }
+
+    public void drawRank(Player player, Rank rank) {
+        PlayerData playerData = pManager.getPlayerData(player);
         Team team = playerData.team();
         if(rank.isSuffix()) {
             team.setSuffix(UText.color(String.format("%s &f%s", team.getSuffix(), rank.getName())));
@@ -84,30 +136,6 @@ public class RankManager {
         }
 
         player.setPlayerListName(String.format("%s%s%s", team.getPrefix(), player.getName(), team.getSuffix()));
-        rank.getAssinged().add(playerData);
-    }
-
-    public void revokeRank(Player player, PlayerData playerData, Rank rank) {
-        List<String> newRanks = playerData.config().getStringList(RankManager.RANK_KEY);
-        newRanks.remove(rank.getName());
-        playerData.config().set(RankManager.RANK_KEY, newRanks);
-
-        updateRanks(player, playerData);
-
-        rank.getAssinged().remove(playerData);
-    }
-
-    public void updateRanks(Player player, PlayerData playerData) {
-        Team team = playerData.team();
-
-        team.setSuffix("");
-        team.setPrefix("");
-        player.setPlayerListName(player.getName());
-        
-        for (String rankID : playerData.config().getStringList(RANK_KEY)) {
-            Rank newRank = getRank(rankID);
-            assignRank(player, playerData, newRank);
-        }
     }
 
     public boolean isRank(String name) {
